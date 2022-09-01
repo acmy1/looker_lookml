@@ -137,12 +137,12 @@ view: order_items {
     filters: [is_search_source: "Yes", status: "Complete"]
     value_format_name: usd_0
   }
-  
+
   dimension: cost {
     type: number
     sql: ${TABLE}.cost ;;
   }
-  
+
   measure: total_gross_margin {
     type: sum
     sql: ${TABLE}.sale_price - ${inventory_items.cost} ;;

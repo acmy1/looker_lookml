@@ -7,41 +7,46 @@ include: "/**/*.dashboard"
 
 datagroup: training_ecommerce_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
-  max_cache_age: "8 hour"
+  max_cache_age: "7 hour"
 }
+
+datagroup: order_items_challenge_datagroup {
+  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+  sql_trigger: SELECT MAX(order_item_id) from order_items ;;
+  max_cache_age: "7 hour"
+}
+
 
 persist_with: training_ecommerce_default_datagroup
 
 label: "E-Commerce Training"
 
 explore: order_items {
-  always_filter:{
-  filters:[order_items.status: "Shipped",users.state: "California",users.traffic_source: "Search"]
-  } 
+  
   join: users {
     type: left_outer
     sql_on: ${order_items.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
-
+  
   join: inventory_items {
     type: left_outer
     sql_on: ${order_items.inventory_item_id} = ${inventory_items.id} ;;
     relationship: many_to_one
   }
-
+  
   join: products {
     type: left_outer
     sql_on: ${inventory_items.product_id} = ${products.id} ;;
     relationship: many_to_one
   }
-
+  
   join: distribution_centers {
     type: left_outer
     sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
     relationship: many_to_one
   }
-
+  
   join: user_details {
     type: left_outer
     sql_on: ${order_items.user_id} = ${user_details.user_id};;
